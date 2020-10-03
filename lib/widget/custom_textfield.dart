@@ -15,9 +15,16 @@ import 'package:flutter/material.dart';
 class CustomTextfield extends StatelessWidget {
   final String titulo, hint;
   final TextEditingController textEditingController;
+  final TextInputType type;
+  final bool oculto;
 
   const CustomTextfield(
-      {Key key, this.titulo, this.hint, this.textEditingController})
+      {Key key,
+      this.titulo,
+      this.hint,
+      this.textEditingController,
+      this.type,
+      this.oculto = false})
       : super(key: key);
 
   @override
@@ -30,7 +37,9 @@ class CustomTextfield extends StatelessWidget {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
         ),
         SizedBox(height: 5),
-        TextField(
+        TextFormField(
+          keyboardType: type,
+          obscureText: oculto,
           decoration: InputDecoration(
               hintText: hint,
               border: OutlineInputBorder(),

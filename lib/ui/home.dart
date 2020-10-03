@@ -9,6 +9,27 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final TextEditingController _edtControllerEmail = TextEditingController();
+  final TextEditingController _edtControllerSenha = TextEditingController();
+
+  // botao login
+  _onClickLogin(BuildContext context) {
+    if (_edtControllerEmail.text.isEmpty || _edtControllerSenha.text.isEmpty) {
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Erro'),
+              content: Text('Login ou Senha invalidos\n\nTente novamente'),
+              actions: [
+                FlatButton(
+                    onPressed: () => Navigator.pop(context), child: Text('Ok'))
+              ],
+            );
+          });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +47,8 @@ class _HomeState extends State<Home> {
                 CustomTextfield(
                   hint: 'E-mail cliente',
                   titulo: 'E-mail',
-                  // textEditingController: ,
+                  type: TextInputType.emailAddress,
+                  textEditingController: _edtControllerEmail,
                 ),
                 SizedBox(
                   height: 40,
@@ -34,7 +56,8 @@ class _HomeState extends State<Home> {
                 CustomTextfield(
                   hint: 'Sua senha de acesso',
                   titulo: 'Senha',
-                  // textEditingController: ,
+                  oculto: true,
+                  textEditingController: _edtControllerSenha,
                 ),
               ],
             ),
@@ -48,9 +71,10 @@ class _HomeState extends State<Home> {
           label: Text('Efetuar Login'),
           backgroundColor: Colors.amber[600],
           onPressed: () {
+            _onClickLogin(context);
             print('botão apertado');
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => ListClient()));
+            // Navigator.push(
+            //     context, MaterialPageRoute(builder: (context) => ListClient()));
           }
           //
           ),

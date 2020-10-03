@@ -7,6 +7,8 @@ class ListClient extends StatefulWidget {
 }
 
 class _ListClientState extends State<ListClient> {
+  List _listaClientes = ['rafa', 'Valesca'];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -14,7 +16,23 @@ class _ListClientState extends State<ListClient> {
           backgroundColor: Colors.amber[600],
           title: Text('My User App - Clientes'),
         ),
-        body: Container(),
+        body: Container(
+          child: Column(
+            children: [
+              Expanded(
+                  child: ListView.builder(
+                      itemCount: _listaClientes.length,
+                      itemBuilder: (context, index) {
+                        return ListTile(
+                          title: Text(_listaClientes[index]),
+                        );
+                      }))
+            ],
+          ),
+        ),
+        //
+        // nagegacao inferior
+        //
         bottomNavigationBar: BottomAppBar(
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
