@@ -231,7 +231,7 @@ class _EditClienteState extends State<EditCliente> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      width: 170,
+                      width: 120,
                       child: RaisedButton(
                           child: Text('Atualizar'),
                           onPressed: () {
@@ -240,7 +240,7 @@ class _EditClienteState extends State<EditCliente> {
                           }),
                     ),
                     Container(
-                      width: 170,
+                      width: 120,
                       child: RaisedButton(
                           child: Text('Salvar Novo'),
                           onPressed: () {

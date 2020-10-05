@@ -213,7 +213,7 @@ class _CreateClienteState extends State<CreateCliente> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      width: 170,
+                      width: 120,
                       child: RaisedButton(
                           child: Text('Salvar Novo'),
                           onPressed: () {
@@ -223,7 +223,7 @@ class _CreateClienteState extends State<CreateCliente> {
                           }),
                     ),
                     Container(
-                      width: 170,
+                      width: 120,
                       child: RaisedButton(
                           child: Text('Limpar'),
                           onPressed: () {
