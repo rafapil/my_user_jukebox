@@ -2,26 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:my_user_jukebox/controller/UsuariosAPI.dart';
 import 'package:my_user_jukebox/widget/custom_textfield.dart';
 
-class EditCliente extends StatefulWidget {
+class CreateCliente extends StatefulWidget {
   @override
-  _EditClienteState createState() => _EditClienteState();
-  bool criarCli;
+  _CreateClienteState createState() => _CreateClienteState();
   String hashLogin;
-  String nomeCli, emailCli, datanasCli, senhaCli, idCli;
 
-  EditCliente(
-      {this.hashLogin,
-      this.criarCli,
-      this.nomeCli,
-      this.emailCli,
-      this.datanasCli,
-      this.senhaCli,
-      this.idCli});
+  CreateCliente(
+    this.hashLogin,
+  );
 }
 
-class _EditClienteState extends State<EditCliente> {
+class _CreateClienteState extends State<CreateCliente> {
   UsuariosAPI usuariosAPI = UsuariosAPI();
-  String _hashApi = '567f81724b57414e9fa30f681ff711c5';
+  String _hashApi = '';
   final TextEditingController _edtControllerHash = TextEditingController();
 
   //
@@ -38,11 +31,10 @@ class _EditClienteState extends State<EditCliente> {
     _edtControllerSenha.text = '';
   }
 
-  _atualizaCliente() {
+  _novoCliente() {
     //
-    usuariosAPI.put(
+    usuariosAPI.post(
         _hashApi,
-        widget.idCli,
         _edtControllerNome.text,
         _edtControllerEmail.text,
         _edtControllerNascimento.text,
@@ -50,40 +42,41 @@ class _EditClienteState extends State<EditCliente> {
   }
 
   btnBar() {
-    if ((widget.criarCli == null || widget.criarCli == false)) {
+    if ((widget.hashLogin == null || widget.hashLogin == false)) {
       return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: Icon(Icons.list_alt_outlined)),
-                Text('Listar Todos')
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      //
-                      _limparCampos();
-                    },
-                    icon: Icon(Icons.group_add_rounded)),
-                Text('Criar Usuário')
-              ],
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                    onPressed: () {}, icon: Icon(Icons.exit_to_app_rounded)),
-                Text('Sair do App')
-              ],
-            )
-          ]);
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // children: <Widget>[
+          //   Column(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: [
+          //       IconButton(
+          //           onPressed: () => Navigator.pop(context),
+          //           icon: Icon(Icons.list_alt_outlined)),
+          //       Text('Listar Todos')
+          //     ],
+          //   ),
+          //   Column(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: [
+          //       IconButton(
+          //           onPressed: () {
+          //             //
+          //             _limparCampos();
+          //           },
+          //           icon: Icon(Icons.group_add_rounded)),
+          //       Text('Criar Usuário')
+          //     ],
+          //   ),
+          //   Column(
+          //     mainAxisSize: MainAxisSize.min,
+          //     children: [
+          //       IconButton(
+          //           onPressed: () {}, icon: Icon(Icons.exit_to_app_rounded)),
+          //       Text('Sair do App')
+          //     ],
+          //   )
+          // ]
+          );
     } else {
       return Row();
     }
@@ -96,17 +89,6 @@ class _EditClienteState extends State<EditCliente> {
       Navigator.pop(context);
     } else {
       _hashApi = widget.hashLogin;
-    }
-
-    _edtControllerNome.text = widget.nomeCli;
-    _edtControllerEmail.text = widget.emailCli;
-    _edtControllerNascimento.text = widget.datanasCli;
-    _edtControllerSenha.text = widget.senhaCli;
-    String _idCliente;
-    if (widget.idCli.isNotEmpty || widget.idCli != null) {
-      _idCliente = widget.idCli.toString();
-    } else {
-      _idCliente = '';
     }
 
     return Scaffold(
@@ -233,16 +215,17 @@ class _EditClienteState extends State<EditCliente> {
                     Container(
                       width: 170,
                       child: RaisedButton(
-                          child: Text('Atualizar'),
+                          child: Text('Salvar Novo'),
                           onPressed: () {
-                            _atualizaCliente();
-                            Navigator.pop(context);
+                            _novoCliente();
+                            _limparCampos();
+                            // print('salvar');
                           }),
                     ),
                     Container(
                       width: 170,
                       child: RaisedButton(
-                          child: Text('Salvar Novo'),
+                          child: Text('Limpar'),
                           onPressed: () {
                             _limparCampos();
                           }),
