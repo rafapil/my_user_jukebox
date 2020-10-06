@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_user_jukebox/controller/UsuariosAPI.dart';
 import 'package:my_user_jukebox/widget/custom_textfield.dart';
+import 'package:email_validator/email_validator.dart';
 
 class CreateCliente extends StatefulWidget {
   @override
@@ -13,6 +14,9 @@ class CreateCliente extends StatefulWidget {
 }
 
 class _CreateClienteState extends State<CreateCliente> {
+  //
+  final _formKey = GlobalKey<FormState>();
+  //
   UsuariosAPI usuariosAPI = UsuariosAPI();
   String _hashApi = '';
   final TextEditingController _edtControllerHash = TextEditingController();
@@ -187,6 +191,9 @@ class _CreateClienteState extends State<CreateCliente> {
                   hint: 'E-mail cliente',
                   titulo: 'E-mail',
                   textEditingController: _edtControllerEmail,
+                  validador: (value) => EmailValidator.validate(value)
+                          ? null
+                          : "Email invalido, por favor verifique!",
                 ),
                 SizedBox(
                   height: 10,

@@ -4,6 +4,7 @@ import 'package:my_user_jukebox/model/Usuario.dart';
 import 'package:my_user_jukebox/ui/edit_client.dart';
 
 import 'create_client.dart';
+import 'home.dart';
 
 class ListClient extends StatefulWidget {
   @override
@@ -242,7 +243,7 @@ class _ListClientState extends State<ListClient> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> Home())),
                             icon: Icon(Icons.exit_to_app_rounded)),
                         Text('Sair do App')
                       ],

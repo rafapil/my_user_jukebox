@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:my_user_jukebox/controller/UsuariosAPI.dart';
 import 'package:my_user_jukebox/widget/custom_textfield.dart';
+import 'package:email_validator/email_validator.dart';
+
+import 'home.dart';
 
 class EditCliente extends StatefulWidget {
   @override
@@ -20,6 +23,9 @@ class EditCliente extends StatefulWidget {
 }
 
 class _EditClienteState extends State<EditCliente> {
+  //
+  final _formKey = GlobalKey<FormState>();
+  //
   UsuariosAPI usuariosAPI = UsuariosAPI();
   String _hashApi = '567f81724b57414e9fa30f681ff711c5';
   final TextEditingController _edtControllerHash = TextEditingController();
@@ -79,7 +85,8 @@ class _EditClienteState extends State<EditCliente> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                    onPressed: () {}, icon: Icon(Icons.exit_to_app_rounded)),
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> Home())),
+                    icon: Icon(Icons.exit_to_app_rounded)),
                 Text('Sair do App')
               ],
             )
@@ -205,6 +212,9 @@ class _EditClienteState extends State<EditCliente> {
                   hint: 'E-mail cliente',
                   titulo: 'E-mail',
                   textEditingController: _edtControllerEmail,
+                  validador: (value) => EmailValidator.validate(value)
+                          ? null
+                          : "Email invalido, por favor verifique!",
                 ),
                 SizedBox(
                   height: 10,
