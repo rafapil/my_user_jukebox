@@ -17,6 +17,7 @@ class CustomTextfield extends StatelessWidget {
   final TextEditingController textEditingController;
   final TextInputType type;
   final bool oculto;
+  final Function validador;
 
   const CustomTextfield(
       {Key key,
@@ -24,7 +25,8 @@ class CustomTextfield extends StatelessWidget {
       this.hint,
       this.textEditingController,
       this.type,
-      this.oculto = false})
+      this.oculto = false,
+      this.validador})
       : super(key: key);
 
   @override
@@ -45,6 +47,7 @@ class CustomTextfield extends StatelessWidget {
               border: OutlineInputBorder(),
               hintStyle: TextStyle(fontSize: 12)),
           controller: textEditingController,
+          validator: validador,
         ),
       ],
     );

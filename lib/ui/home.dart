@@ -4,6 +4,7 @@ import 'package:my_user_jukebox/controller/UsuariosAPI.dart';
 import 'package:my_user_jukebox/ui/edit_client.dart';
 import 'package:my_user_jukebox/ui/list_client.dart';
 import 'package:my_user_jukebox/widget/custom_textfield.dart';
+import 'package:email_validator/email_validator.dart';
 
 import 'create_client.dart';
 
@@ -14,8 +15,10 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   //
+  final _formKey = GlobalKey<FormState>();
+  //
   UsuariosAPI usuariosAPI = UsuariosAPI();
-  String _hashApi = '4bc9b7f747614a2f9e6ee4f881ad499e';
+  String _hashApi = '5a7fad3f94e44e4da7c8451c66c1770e';
   final TextEditingController _edtControllerEmail = TextEditingController();
   final TextEditingController _edtControllerSenha = TextEditingController();
   final TextEditingController _edtControllerHash = TextEditingController();
@@ -81,7 +84,7 @@ class _HomeState extends State<Home> {
     final _screenWidh = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.deepPurpleAccent[200],
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
         elevation: 0,
@@ -161,33 +164,45 @@ class _HomeState extends State<Home> {
               )
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.deepPurpleAccent[200],
-          padding: EdgeInsets.only(
-              left: 60, right: 60, top: _screenWidh / 2.7, bottom: _screenWidh),
+      body: Center(
+        child: SingleChildScrollView(
           child: Container(
-            // alterar para only
-            padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 40),
-            color: Colors.white.withOpacity(0.15),
-            child: Column(
-              children: [
-                CustomTextfield(
-                  hint: 'E-mail cliente',
-                  titulo: 'E-mail',
-                  type: TextInputType.emailAddress,
-                  textEditingController: _edtControllerEmail,
+            // color: Colors.deepPurpleAccent[200],
+            padding: EdgeInsets.only(
+                left: 60,
+                right: 60,
+                top: _screenWidh / 3,
+                bottom: _screenWidh / 2.2),
+            child: Container(
+              // alterar para only
+              padding:
+                  EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
+              color: Colors.white.withOpacity(0.15),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    CustomTextfield(
+                      hint: 'E-mail cliente',
+                      titulo: 'E-mail',
+                      type: TextInputType.emailAddress,
+                      textEditingController: _edtControllerEmail,
+                      validador: (value) => EmailValidator.validate(value)
+                          ? null
+                          : "Email invalido, por favor verifique!",
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                    CustomTextfield(
+                      hint: 'Sua senha de acesso',
+                      titulo: 'Senha',
+                      oculto: true,
+                      textEditingController: _edtControllerSenha,
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 40,
-                ),
-                CustomTextfield(
-                  hint: 'Sua senha de acesso',
-                  titulo: 'Senha',
-                  oculto: true,
-                  textEditingController: _edtControllerSenha,
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -199,8 +214,14 @@ class _HomeState extends State<Home> {
           label: Text('Efetuar Login'),
           backgroundColor: Colors.amber[600],
           onPressed: () {
-            _onClickLogin(context);
-            print('botão apertado');
+            if (_formKey.currentState.validate()) {
+              // _formKey.currentState.save();
+              print('Email passou!!!');
+              //_onClickLogin(context);
+            } else {
+              // pensar em logar algo no futuro?
+              print('Erro no email');
+            }
           }
           //
           ),
