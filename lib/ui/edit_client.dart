@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:my_user_jukebox/controller/UsuariosAPI.dart';
 import 'package:my_user_jukebox/widget/custom_textfield.dart';
 import 'package:email_validator/email_validator.dart';
+import 'dart:convert';
+import 'package:crypto/crypto.dart';
 
+import 'create_client.dart';
 import 'home.dart';
+import 'list_client.dart';
 
 class EditCliente extends StatefulWidget {
   @override
@@ -25,9 +29,10 @@ class EditCliente extends StatefulWidget {
 class _EditClienteState extends State<EditCliente> {
   //
   final _formKey = GlobalKey<FormState>();
+
   //
   UsuariosAPI usuariosAPI = UsuariosAPI();
-  String _hashApi = '567f81724b57414e9fa30f681ff711c5';
+  String _hashApi = '';
   final TextEditingController _edtControllerHash = TextEditingController();
 
   //
@@ -51,8 +56,12 @@ class _EditClienteState extends State<EditCliente> {
         widget.idCli,
         _edtControllerNome.text,
         _edtControllerEmail.text,
-        _edtControllerNascimento.text,
-        _edtControllerSenha.text);
+        _edtControllerNascimento.text
+            .replaceAll('/', '-')
+            .replaceAll(':', '-')
+            .replaceAll(' ', '-')
+            .replaceAll('_', '-'),
+        md5.convert(utf8.encode(_edtControllerSenha.text)).toString());
   }
 
   btnBar() {
@@ -75,7 +84,11 @@ class _EditClienteState extends State<EditCliente> {
                 IconButton(
                     onPressed: () {
                       //
-                      _limparCampos();
+                      // Navigator.pushAndRemoveUntil(context, CreateCliente(), (route) => false)
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(
+                          builder: (context) => CreateCliente(
+                                _hashApi,
+                              )));
                     },
                     icon: Icon(Icons.group_add_rounded)),
                 Text('Criar Usuário')
@@ -85,7 +98,11 @@ class _EditClienteState extends State<EditCliente> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> Home())),
+                    onPressed: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => Home()),
+                          (Route<dynamic> route) => false);
+                    },
                     icon: Icon(Icons.exit_to_app_rounded)),
                 Text('Sair do App')
               ],
@@ -197,69 +214,79 @@ class _EditClienteState extends State<EditCliente> {
         body: Container(
           padding: EdgeInsets.only(left: 35, right: 35, top: 80),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTextfield(
-                  hint: 'Digite o nome',
-                  titulo: 'Nome',
-                  textEditingController: _edtControllerNome,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomTextfield(
-                  hint: 'E-mail cliente',
-                  titulo: 'E-mail',
-                  textEditingController: _edtControllerEmail,
-                  validador: (value) => EmailValidator.validate(value)
-                          ? null
-                          : "Email invalido, por favor verifique!",
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomTextfield(
-                  // Fazer um validador para a senha
-                  hint: 'Digite a data desta forma: 10-06-2006',
-                  titulo: 'Nascimento',
-                  textEditingController: _edtControllerNascimento,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomTextfield(
-                  hint: 'Digite uma senha',
-                  titulo: 'Senha',
-                  oculto: true,
-                  textEditingController: _edtControllerSenha,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 120,
-                      child: RaisedButton(
-                          child: Text('Atualizar'),
-                          onPressed: () {
-                            _atualizaCliente();
-                            Navigator.pop(context);
-                          }),
-                    ),
-                    Container(
-                      width: 120,
-                      child: RaisedButton(
-                          child: Text('Salvar Novo'),
-                          onPressed: () {
-                            _limparCampos();
-                          }),
-                    )
-                  ],
-                )
-              ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomTextfield(
+                    hint: 'Digite o nome',
+                    titulo: 'Nome',
+                    textEditingController: _edtControllerNome,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextfield(
+                    hint: 'E-mail cliente',
+                    titulo: 'E-mail',
+                    textEditingController: _edtControllerEmail,
+                    validador: (value) => EmailValidator.validate(value)
+                        ? null
+                        : "Email invalido, por favor verifique!",
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextfield(
+                    // Fazer um validador para a senha
+                    hint: 'Digite a data desta forma: 10-06-2006',
+                    titulo: 'Nascimento',
+                    textEditingController: _edtControllerNascimento,
+                    type: TextInputType.datetime,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextfield(
+                    hint: 'Digite uma senha',
+                    titulo: 'Senha',
+                    oculto: true,
+                    textEditingController: _edtControllerSenha,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 120,
+                        child: RaisedButton(
+                            child: Text('Atualizar'),
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                _atualizaCliente();
+                                // Navigator.of(context).pop();
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ListClient(_hashApi)));
+                              }
+                            }),
+                      ),
+                      Container(
+                        width: 120,
+                        child: RaisedButton(
+                            child: Text('Limpar'),
+                            onPressed: () {
+                              _limparCampos();
+                            }),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

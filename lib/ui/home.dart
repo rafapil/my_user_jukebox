@@ -16,9 +16,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   //
   final _formKey = GlobalKey<FormState>();
+
   //
   UsuariosAPI usuariosAPI = UsuariosAPI();
-  String _hashApi = '5a7fad3f94e44e4da7c8451c66c1770e';
+  /*
+  * Caso queira trocar a hash para efeuar os testes basta alterar aqui ou pode ser realizado pela UI normalmente
+  *  */
+  String _hashApi = 'd1774a0786474911a7db8072ebf8a229';
   final TextEditingController _edtControllerEmail = TextEditingController();
   final TextEditingController _edtControllerSenha = TextEditingController();
   final TextEditingController _edtControllerHash = TextEditingController();
@@ -57,7 +61,7 @@ class _HomeState extends State<Home> {
       //
       usuariosAPI.hashApi = _hashApi;
       if (usuariosAPI.login() != null) {
-        Navigator.push(context,
+        Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => ListClient(_hashApi)));
       } else {
         showDialog(
@@ -216,11 +220,8 @@ class _HomeState extends State<Home> {
           onPressed: () {
             if (_formKey.currentState.validate()) {
               // _formKey.currentState.save();
-              print('Email passou!!!');
-              //_onClickLogin(context);
-            } else {
-              // pensar em logar algo no futuro?
-              print('Erro no email');
+              //print('Email passou!!!');
+              _onClickLogin(context);
             }
           }
           //

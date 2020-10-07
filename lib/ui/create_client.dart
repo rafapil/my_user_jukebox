@@ -1,7 +1,12 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:my_user_jukebox/controller/UsuariosAPI.dart';
 import 'package:my_user_jukebox/widget/custom_textfield.dart';
 import 'package:email_validator/email_validator.dart';
+
+import 'list_client.dart';
 
 class CreateCliente extends StatefulWidget {
   @override
@@ -16,6 +21,7 @@ class CreateCliente extends StatefulWidget {
 class _CreateClienteState extends State<CreateCliente> {
   //
   final _formKey = GlobalKey<FormState>();
+
   //
   UsuariosAPI usuariosAPI = UsuariosAPI();
   String _hashApi = '';
@@ -41,45 +47,18 @@ class _CreateClienteState extends State<CreateCliente> {
         _hashApi,
         _edtControllerNome.text,
         _edtControllerEmail.text,
-        _edtControllerNascimento.text,
-        _edtControllerSenha.text);
+        _edtControllerNascimento.text
+            .replaceAll('/', '-')
+            .replaceAll(':', '-')
+            .replaceAll(' ', '-')
+            .replaceAll('_', '-'),
+        md5.convert(utf8.encode(_edtControllerSenha.text)).toString());
   }
 
   btnBar() {
     if ((widget.hashLogin == null || widget.hashLogin == false)) {
       return Row(
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          // children: <Widget>[
-          //   Column(
-          //     mainAxisSize: MainAxisSize.min,
-          //     children: [
-          //       IconButton(
-          //           onPressed: () => Navigator.pop(context),
-          //           icon: Icon(Icons.list_alt_outlined)),
-          //       Text('Listar Todos')
-          //     ],
-          //   ),
-          //   Column(
-          //     mainAxisSize: MainAxisSize.min,
-          //     children: [
-          //       IconButton(
-          //           onPressed: () {
-          //             //
-          //             _limparCampos();
-          //           },
-          //           icon: Icon(Icons.group_add_rounded)),
-          //       Text('Criar Usuário')
-          //     ],
-          //   ),
-          //   Column(
-          //     mainAxisSize: MainAxisSize.min,
-          //     children: [
-          //       IconButton(
-          //           onPressed: () {}, icon: Icon(Icons.exit_to_app_rounded)),
-          //       Text('Sair do App')
-          //     ],
-          //   )
-          // ]
+          // Criar Widget para menus
           );
     } else {
       return Row();
@@ -176,70 +155,80 @@ class _CreateClienteState extends State<CreateCliente> {
         body: Container(
           padding: EdgeInsets.only(left: 35, right: 35, top: 80),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomTextfield(
-                  hint: 'Digite o nome',
-                  titulo: 'Nome',
-                  textEditingController: _edtControllerNome,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomTextfield(
-                  hint: 'E-mail cliente',
-                  titulo: 'E-mail',
-                  textEditingController: _edtControllerEmail,
-                  validador: (value) => EmailValidator.validate(value)
-                          ? null
-                          : "Email invalido, por favor verifique!",
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomTextfield(
-                  // Fazer um validador para a senha
-                  hint: 'Digite a data desta forma: 10-06-2006',
-                  titulo: 'Nascimento',
-                  textEditingController: _edtControllerNascimento,
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                CustomTextfield(
-                  hint: 'Digite uma senha',
-                  titulo: 'Senha',
-                  oculto: true,
-                  textEditingController: _edtControllerSenha,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: 120,
-                      child: RaisedButton(
-                          child: Text('Salvar Novo'),
-                          onPressed: () {
-                            _novoCliente();
-                            _limparCampos();
-                            // print('salvar');
-                          }),
-                    ),
-                    Container(
-                      width: 120,
-                      child: RaisedButton(
-                          child: Text('Limpar'),
-                          onPressed: () {
-                            _limparCampos();
-                          }),
-                    )
-                  ],
-                )
-              ],
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomTextfield(
+                    hint: 'Digite o nome',
+                    titulo: 'Nome',
+                    textEditingController: _edtControllerNome,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextfield(
+                    hint: 'E-mail cliente',
+                    titulo: 'E-mail',
+                    textEditingController: _edtControllerEmail,
+                    validador: (value) => EmailValidator.validate(value)
+                        ? null
+                        : "Email invalido, por favor verifique!",
+                    type: TextInputType.emailAddress,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextfield(
+                    // Fazer um validador para a senha
+                    hint: 'Digite a data desta forma: 10-06-2006',
+                    titulo: 'Nascimento',
+                    textEditingController: _edtControllerNascimento,
+                    type: TextInputType.datetime,
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  CustomTextfield(
+                    hint: 'Digite uma senha',
+                    titulo: 'Senha',
+                    oculto: true,
+                    textEditingController: _edtControllerSenha,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 120,
+                        child: RaisedButton(
+                            child: Text('Salvar Novo'),
+                            onPressed: () {
+                              if (_formKey.currentState.validate()) {
+                                _novoCliente();
+                                _limparCampos();
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ListClient(_hashApi)));
+                              }
+                            }),
+                      ),
+                      Container(
+                        width: 120,
+                        child: RaisedButton(
+                            child: Text('Limpar'),
+                            onPressed: () {
+                              _limparCampos();
+                            }),
+                      )
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

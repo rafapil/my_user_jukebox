@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_user_jukebox/controller/UsuariosAPI.dart';
 import 'package:my_user_jukebox/model/Usuario.dart';
 import 'package:my_user_jukebox/ui/edit_client.dart';
-
 import 'create_client.dart';
 import 'home.dart';
 
@@ -45,9 +44,14 @@ class _ListClientState extends State<ListClient> {
     }
 
     _deleteCliente(id) {
-      // colocar um alert aqui amanha!!!!!
       setState(() {
         usuariosAPI.delete(_hashApi, id);
+      });
+    }
+
+    _carregarCliente() {
+      setState(() {
+        usuariosAPI.recuperarPostagens(_hashApi);
       });
     }
 
@@ -135,10 +139,7 @@ class _ListClientState extends State<ListClient> {
               Expanded(
                   child: FutureBuilder<List<Usuario>>(
                 future: usuariosAPI.recuperarPostagens(_hashApi),
-                builder: (context, snapshot) {
-                  //
-                  //String resultado;
-
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.none:
                     case ConnectionState.waiting:
@@ -151,6 +152,7 @@ class _ListClientState extends State<ListClient> {
                       } else {
                         //
                         return ListView.builder(
+                          padding: EdgeInsets.all(16),
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index) {
                             //
@@ -158,8 +160,13 @@ class _ListClientState extends State<ListClient> {
                             Usuario user = lista[index];
                             //
                             return ListTile(
+                              contentPadding:
+                                  EdgeInsets.symmetric(vertical: 10),
                               title: Text(
-                                  'Nome do cliente: ' + user.nome.toString()),
+                                'Nome do cliente: ' + user.nome.toString(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.w500, fontSize: 16),
+                              ),
                               subtitle: Text('Email: ' +
                                   user.email.toString() +
                                   '\nData de Nascimento: ' +
@@ -217,7 +224,9 @@ class _ListClientState extends State<ListClient> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              _carregarCliente;
+                            },
                             icon: Icon(Icons.list_alt_outlined)),
                         Text('Listar Todos')
                       ],
@@ -243,7 +252,12 @@ class _ListClientState extends State<ListClient> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> Home())),
+                            onPressed: () {
+                              Navigator.of(context).pushAndRemoveUntil(
+                                  MaterialPageRoute(
+                                      builder: (context) => Home()),
+                                  (Route<dynamic> route) => false);
+                            },
                             icon: Icon(Icons.exit_to_app_rounded)),
                         Text('Sair do App')
                       ],
