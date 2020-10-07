@@ -10,20 +10,20 @@ Aplicação para teste de conhecimento da jukebox
 <br><br>
 <p>Pontos não finalizados até 04-out-2020</p>
 <ul>
-  <li>Criptografia na senha ao efetuar o cadastro<li>
-  <li>Validação do email ao ser inserido pelo usuario<li>
-  <li>Adicionar opção sair do app<ul>  
-  <li>Adicional: usar Shared Preferences para a hash<li>
-  <li>Adicional: Ajustar para ter refresh na lista de clientes<li>
-  <li>Adicional: Adicionar opção de recuperar senha<ul>
-  <li>Adicional: Usar DIO para tratar http<ul>
+<li>Criptografia na senha ao efetuar o cadastro</li>
+<li>Validação do email ao ser inserido pelo usuario</li>
+<li>Adicionar opção sair do app</li>  
+<li>Adicional: usar Shared Preferences para a hash</li>
+<li>Adicional: Ajustar para ter refresh na lista de clientes</li>
+<li>Adicional: Adicionar opção de recuperar senha</li>
+<li>Adicional: Usar DIO para tratar http</li>
 </ul>
 <br>
 <p>Pontos não finalizados até 06-out-2020</p>
 <ul>
-  <li>Adicional: usar Shared Preferences para a hash<li>
-  <li>Adicional: Adicionar opção de recuperar senha<ul>
-  <li>Adicional: Usar DIO para tratar http<ul>  
+  <li>Adicional: usar Shared Preferences para a hash</li>
+  <li>Adicional: Adicionar opção de recuperar senha</li>
+  <li>Adicional: Usar DIO para tratar http</li>  
 </ul>
     
 <br><br>
